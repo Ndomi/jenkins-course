@@ -36,3 +36,6 @@ jobs:
           body: 'Trivy vulnerability scanner'
           to: ${{ secrets.EMAIL_TO }}
           from: ${{ secrets.EMAIL_FROM }}
+          content_type: 'text/plain'
+          attachments: 'trivy-results.sarif'
+        if: always()
