@@ -10,16 +10,22 @@ jobs:
   build:
     name: Run Trivy vulnerability scanner
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        container_image: ['docker.io/ndomi/fastapi:latest', 'another/image:tag', 'yet/another/image:tag']
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Run Trivy vulnerability scanner
+        id: trivy
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "image"
-          image-ref: "docker.io/ndomi/fastapi:latest"
-          format: "table"
+          image-ref: ${{ matrix.container_image }}
+          format: "template"
+          template: "@/contrib/sarif.tpl"
+          output: "trivy-results-${{ matrix.container_image }}.sarif"
           # exit-code: "0"
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -29,8 +35,8 @@ jobs:
         id: gist
         uses: ghes/actions/github-gist-action@v2
         with:
-          filename: trivy-results.sarif
-          gistname: trivy-results.sarif
+          filename: "trivy-results-${{ matrix.container_image }}.sarif"
+          gistname: "trivy-results-${{ matrix.container_image }}.sarif"
           description: Trivy vulnerability scan report
           public: true
         env:
