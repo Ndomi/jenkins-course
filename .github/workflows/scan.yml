@@ -1,0 +1,23 @@
+name: build
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    name: Run Trivy vulnerability scanner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.1.0
+        with:
+          scan-type: "image"
+          image-ref: "bitnami/python:3.9-debian-12"
+          format: "table"
+          exit-code: "1"
