@@ -25,11 +25,23 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           severity: "CRITICAL,HIGH"
 
+      - name: Create Gist
+        id: gist
+        uses: ghes/actions/github-gist-action@v2
+        with:
+          filename: trivy-results.sarif
+          gistname: trivy-results.sarif
+          description: Trivy vulnerability scan report
+          public: true
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}    
+
       - name: Send Slack notification
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          Trivy vulnerability scan report: ${{ steps.gist.outputs.gist_url }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
