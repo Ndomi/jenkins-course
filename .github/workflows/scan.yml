@@ -18,6 +18,8 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "image"
-          image-ref: "bitnami/python:3.9-debian-12"
+          image-ref: "ndomi/fastapi:latest"
           format: "table"
           exit-code: "1"
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
