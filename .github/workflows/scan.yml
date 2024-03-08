@@ -18,8 +18,9 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "image"
-          image-ref: "ndomi/fastapi:latest"
+          image-ref: "docker.io/ndomi/fastapi:latest"
           format: "table"
           exit-code: "1"
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+          severity: "CRITICAL,HIGH"
